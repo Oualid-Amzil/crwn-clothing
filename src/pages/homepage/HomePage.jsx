@@ -4,7 +4,7 @@ import Directory from "../../components/directory/Directory";
 
 import classes from "./HomePage.module.css";
 
-const HomePage = (props) => {
+const HomePage = ({ history }) => {
   return (
     <div className={classes.homepage}>
       <Directory />
