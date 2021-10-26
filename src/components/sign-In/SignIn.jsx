@@ -4,6 +4,7 @@ import FormInput from "../form-input/FormInput";
 import CustomButton from "../custom-button/CustomButton";
 
 import { signInWithGoogle } from "../../firebase/firebase.utils";
+import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
 
 import classes from "./SignIn.module.css";
 
@@ -17,16 +18,32 @@ class SignIn extends React.Component {
     };
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
 
-    this.setState({ email: "", password: "" });
+    const { email, password } = this.state;
+
+    try {
+      const auth = getAuth();
+      await signInWithEmailAndPassword(auth, email, password);
+      this.setState({ email: "", password: "" });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  handleChange = (event) => {
-    const { value, name } = event.target;
+  // handleChange = (event) => {
+  //   const { value, name } = event.target;
 
-    this.setState({ [name]: value });
+  //   this.setState({ [name]: value });
+  // };
+
+  emailChangeHandler = (event) => {
+    this.setState({ email: event.target.value });
+  };
+
+  passwordChangeHandler = (event) => {
+    this.setState({ password: event.target.value });
   };
 
   render() {
@@ -42,7 +59,7 @@ class SignIn extends React.Component {
             name="Email"
             type="email"
             value={this.state.email}
-            handleChange={this.handleChange}
+            handleChange={this.emailChangeHandler}
             label="Email"
             required
           />
@@ -50,7 +67,7 @@ class SignIn extends React.Component {
             name="Password"
             type="password"
             value={this.state.password}
-            handleChange={this.handleChange}
+            handleChange={this.passwordChangeHandler}
             label="Password"
             required
           />
